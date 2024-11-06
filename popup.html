@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Twitter Mass Unfollow</title>
+  <style>
+    :root {
+      --claude-bg: #F6F5F1;
+      --claude-text: #141414;
+      --claude-secondary: #6E6E6E;
+      --claude-border: #E5E5E5;
+      --claude-highlight: #574B9B;
+      --claude-button: #574B9B;
+      --claude-disabled: #A8A8A8;
+    }
+
+    body {
+      width: 360px;
+      padding: 24px;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--claude-bg);
+      color: var(--claude-text);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .container {
+      background: var(--claude-bg);
+    }
+
+    h2 {
+      color: var(--claude-text);
+      font-weight: 600;
+      margin-top: 0;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .settings {
+      margin: 1.5rem 0;
+    }
+
+    .settings-group {
+      margin-bottom: 1.25rem;
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--claude-border);
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: var(--claude-text);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="number"] {
+      width: calc(100% - 24px);
+      padding: 8px 12px;
+      border: 1px solid var(--claude-border);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: var(--claude-text);
+      transition: border-color 0.2s;
+      background: white;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: var(--claude-highlight);
+      box-shadow: 0 0 0 2px rgba(87, 75, 155, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+
+    button {
+      flex: 1;
+      padding: 8px 16px;
+      border: 1px solid var(--claude-button);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    #startUnfollow {
+      background-color: var(--claude-button);
+      color: white;
+    }
+
+    #startUnfollow:hover {
+      background-color: #483D82;
+    }
+
+    #stopUnfollow {
+      background-color: white;
+      color: var(--claude-button);
+    }
+
+    #stopUnfollow:hover {
+      background-color: rgba(87, 75, 155, 0.1);
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      border-color: var(--claude-disabled);
+      color: var(--claude-disabled);
+    }
+
+    .helper-text {
+      font-size: 0.75rem;
+      color: var(--claude-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .progress-container {
+      margin-top: 1.5rem;
+      padding: 16px;
+      background-color: white;
+      border-radius: 8px;
+      border: 1px solid var(--claude-border);
+    }
+
+    .progress-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+
+    .stat-box {
+      padding: 8px 16px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--claude-secondary);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--claude-text);
+    }
+
+    .progress-bar-container {
+      height: 4px;
+      background-color: var(--claude-border);
+      border-radius: 2px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background-color: var(--claude-button);
+      transition: width 0.3s ease;
+    }
+
+    #status {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--claude-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Twitter Mass Unfollow</h2>
+    
+    <div class="settings">
+      <div class="settings-group">
+        <label for="maxUnfollows">Maximum accounts to unfollow</label>
+        <input type="number" id="maxUnfollows" value="50" min="1" max="1000">
+        <div class="helper-text">Sets a safe limit to avoid rate limiting</div>
+      </div>
+
+      <div class="settings-group">
+        <label for="delay">Delay between actions (seconds)</label>
+        <input type="number" id="delay" value="2" min="1" max="10">
+        <div class="helper-text">Recommended: 2-3 seconds for stability</div>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-stats">
+        <div class="stat-box">
+          <div class="stat-label">Unfollowed</div>
+          <div class="stat-value" id="unfollowCount">0</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Target</div>
+          <div class="stat-value" id="targetCount">50</div>
+        </div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div id="status">Ready to start</div>
+    </div>
+
+    <div class="button-group">
+      <button id="startUnfollow">Start Unfollowing</button>
+      <button id="stopUnfollow" disabled>Stop</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
